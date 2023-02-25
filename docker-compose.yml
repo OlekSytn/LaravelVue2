@@ -1,0 +1,36 @@
+version: '3.7'
+services: 
+  app:  
+    build:
+        context: .
+        dockerfile: .docker/php/Dockerfile
+    image: 'laravelapp'         
+    ports:
+      - 8080:80      
+    volumes:
+        - ./:/var/www/html
+  db:
+    image: mysql:5.7
+    restart: always
+    ports: 
+      - "3606:3306"
+    environment:
+      MYSQL_DATABASE: 'teste_final_reativo'      
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_ROOT_PASSWORD: ""
+    volumes:
+      - ./db:/var/lib/mysql
+  rd:
+    image: redis:3.2.5-alpine
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+  les:
+    build:
+      context: .
+      dockerfile: .docker/laravel-echo-server/Dockerfile
+    image: laravel-echo-server
+    ports:
+      - "6001:6001"
+    
